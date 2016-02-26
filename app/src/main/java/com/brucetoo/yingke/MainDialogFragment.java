@@ -39,7 +39,8 @@ public class MainDialogFragment extends DialogFragment {
                 if(position == 0){
                     return new TopEmptyFragment();
                 }else if (position == 1){
-                    return new TopLayerFragment();
+                    return new TopMainFragment();//垂直滚动ViewPager
+//                    return new TopLayerFragment();
                 }
                 return null;
             }
