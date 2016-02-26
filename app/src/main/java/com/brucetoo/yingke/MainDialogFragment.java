@@ -1,8 +1,11 @@
 package com.brucetoo.yingke;
 
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
@@ -27,7 +30,8 @@ public class MainDialogFragment extends DialogFragment {
     View leftHeader;
     View btnShow;
     CustomEditText editInput;
-    View activityRootView;
+
+    private Handler handler = new Handler();
 
     @Nullable
     @Override
@@ -54,12 +58,12 @@ public class MainDialogFragment extends DialogFragment {
         //监听软键盘的隐藏和显示  但是activity的配置必须是 android:windowSoftInputMode="adjustResize" 但是此处的需求不能resize activity中的布局
         //所有排除此方法
 //        activityRootView = ((MainActivity)getActivity()).rootView;
-//        activityRootView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+//        activityRootView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {//                }else {
+
 //            @Override
 //            public void onGlobalLayout() {
 //                int heightDiff = activityRootView.getRootView().getHeight() - activityRootView.getHeight();
 //                if (heightDiff > 100) { // 软键盘存在
-//                }else {
 //                }
 //            }
 //        });
@@ -70,9 +74,14 @@ public class MainDialogFragment extends DialogFragment {
             @Override
             public void onKeycodeBack() {
                 hideKeyboard();
-                //这里为了更友好 可以 用Handler延迟一段时间显示btnShow按钮 或者布局
-                btnShow.setVisibility(View.VISIBLE);
                 editInput.setVisibility(View.GONE);
+                //这里为了更友好 可以 用Handler延迟一段时间显示btnShow按钮 或者布局
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        btnShow.setVisibility(View.VISIBLE);
+                    }
+                },200);
             }
         });
 
@@ -96,15 +105,36 @@ public class MainDialogFragment extends DialogFragment {
     }
 
     private void hideKeyboard() {
+
         InputMethodManager imm = (InputMethodManager)
                 getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(editInput.getWindowToken(), 0);
+
+        ObjectAnimator leftAnim = ObjectAnimator.ofFloat(leftHeader,"translationX",-leftHeader.getWidth(),0);
+        ObjectAnimator topAnim = ObjectAnimator.ofFloat(topHeader,"translationY",-topHeader.getHeight(),0);
+        AnimatorSet animatorSet = new AnimatorSet();
+        animatorSet.playTogether(leftAnim,topAnim);
+        animatorSet.setDuration(300);
+        animatorSet.start();
     }
 
     private void showKeyboard() {
-        InputMethodManager imm = (InputMethodManager)
-                getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.showSoftInput(editInput, InputMethodManager.SHOW_FORCED);
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                InputMethodManager imm = (InputMethodManager)
+                        getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.showSoftInput(editInput, InputMethodManager.SHOW_FORCED);
+            }
+        }, 100);
+
+        //头部的View执行退出动画
+        ObjectAnimator leftAnim = ObjectAnimator.ofFloat(leftHeader,"translationX",0,-leftHeader.getWidth());
+        ObjectAnimator topAnim = ObjectAnimator.ofFloat(topHeader,"translationY",0,-topHeader.getHeight());
+        AnimatorSet animatorSet = new AnimatorSet();
+        animatorSet.playTogether(leftAnim, topAnim);
+        animatorSet.setDuration(300);
+        animatorSet.start();
     }
 
     public void toggleSoftInput() {
