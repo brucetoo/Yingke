@@ -1,11 +1,11 @@
 # Yingke
-###映客直播间布局设计的一种实现demo
+###A way to achieve [Yingke](http://www.inke.tv/) room design concept
 
->1.上层布局随键盘的弹出而跟随运动,底层视频播放布局始终处于最底层，不随键盘弹出而滚动
+>1.Top layer move up and down when SoftKeyboard show or hide.But    Under layer still remain the same what ever happened about SoftKeyboard
 
->2.映客IOS版中 加入了上层布局左滑切换的效果 我在此demo已加上
+>2.[Yingke](http://www.inke.tv/) IOS app in Live room content view can slide left to dismiss....Work it out by ViewPager
 
->3.映客IOS版中 加入上层布局上下滑动切换直播间效果，this demo trying.....
+>3.[Yingke](http://www.inke.tv/) IOS app room can slide up and down can change between different room，this demo trying.....
 
 # Here is demo gif
 
