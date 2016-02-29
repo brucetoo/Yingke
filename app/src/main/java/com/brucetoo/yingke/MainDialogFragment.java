@@ -21,6 +21,11 @@ import android.view.ViewGroup;
 public class MainDialogFragment extends DialogFragment {
 
     private ViewPager viewPager;
+    private ScrollListener listener;
+
+    public MainDialogFragment(ScrollListener listener){
+        this.listener = listener;
+    }
 
     @Nullable
     @Override
@@ -39,7 +44,7 @@ public class MainDialogFragment extends DialogFragment {
                 if(position == 0){
                     return new TopEmptyFragment();
                 }else if (position == 1){
-                    return new TopMainFragment();//垂直滚动ViewPager
+                    return new TopMainFragment(listener);//垂直滚动ViewPager
 //                    return new TopLayerFragment();
                 }
                 return null;

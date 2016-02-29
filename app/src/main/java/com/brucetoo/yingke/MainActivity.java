@@ -7,6 +7,7 @@ import android.view.View;
 public class MainActivity extends FragmentActivity {
 
     public View rootView;
+    ScrollListener listener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -14,11 +15,13 @@ public class MainActivity extends FragmentActivity {
         setContentView(R.layout.activity_main);
         rootView = findViewById(R.id.root_content);
 
+        VideoFragment fragment = new VideoFragment();
+        listener = fragment.createScrollListener();
         getSupportFragmentManager()
                 .beginTransaction()
-                .add(R.id.layout_video_play, new VideoFragment())
+                .add(R.id.layout_video_play, fragment)
                 .commit();
 
-        new MainDialogFragment().show(getSupportFragmentManager(),"MainDialogFragment");
+        new MainDialogFragment(listener).show(getSupportFragmentManager(),"MainDialogFragment");
     }
 }

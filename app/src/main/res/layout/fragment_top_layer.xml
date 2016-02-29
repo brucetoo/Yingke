@@ -1,99 +1,127 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:id="@+id/root_view"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
+<RelativeLayout android:id="@+id/root_view"
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
     <TextView
+        android:id="@+id/tv_header_top"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:text="This is head profile"
-        android:gravity="center"
-        android:id="@+id/tv_header_top"
         android:background="@color/colorPrimary"
+        android:gravity="center"
+        android:text="This is head profile"
         />
+
     <TextView
+        android:id="@+id/tv_header_left"
         android:layout_width="wrap_content"
         android:layout_height="50dp"
-        android:text="This is user profile"
-        android:gravity="center"
         android:layout_below="@+id/tv_header_top"
-        android:id="@+id/tv_header_left"
         android:background="@color/colorPrimaryDark"
+        android:gravity="center"
+        android:text="This is user profile"
         />
 
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="150dp"
-        android:text="This is gift area"
-        android:gravity="center"
         android:layout_above="@+id/layout_message"
         android:background="@color/colorAccent"
+        android:gravity="center"
+        android:text="This is gift area"
         />
 
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
+    <ScrollView
         android:id="@+id/layout_message"
-        android:layout_marginTop="20dp"
         android:layout_above="@+id/layout_bottom"
-        >
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="I'm a message 1"
-            />
+        android:layout_width="match_parent"
+        android:layout_height="80dp">
 
-        <TextView
-            android:layout_width="match_parent"
+        <LinearLayout
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="I'm a message 2"
-            />
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="I'm a message 3"
-            />
+            android:layout_marginTop="20dp"
+            android:orientation="vertical"
+            >
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="I'm a message 4"
-            />
-    </LinearLayout>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="I'm a message 1"
+                />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="I'm a message 2"
+                />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="I'm a message 3"
+                />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="I'm a message 4"
+                />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="I'm a message 5"
+                />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="I'm a message 6"
+                />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="I'm a message 7"
+                />
+        </LinearLayout>
+
+    </ScrollView>
 
 
     <FrameLayout
+        android:id="@+id/layout_bottom"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_marginTop="10dp"
         android:layout_alignParentBottom="true"
-        android:id="@+id/layout_bottom"
+        android:layout_marginTop="10dp"
         >
 
         <Button
+            android:id="@+id/btn_show_edit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Click Me"
-            android:id="@+id/btn_show_edit"
             />
 
         <com.brucetoo.yingke.CustomEditText
+            android:id="@+id/edit_input"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/edit_input"
             android:visibility="gone"
             />
     </FrameLayout>
-
 
 
 </RelativeLayout>

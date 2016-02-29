@@ -1,16 +1,20 @@
 package com.brucetoo.yingke;
 
+import android.content.Context;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 
 import java.io.IOException;
 
@@ -23,6 +27,38 @@ public class VideoFragment extends Fragment implements SurfaceHolder.Callback, M
 
     private SurfaceView surfaceView;
     MediaPlayer mediaPlayer;
+    private View rootView;
+
+    private ScrollListener listener;
+
+    public ScrollListener createScrollListener() {
+        listener = new ScrollListener() {
+            @Override
+            public void onScroll(final float transY, final boolean goUp) {
+                Log.e("onScroll", "transY " + transY);
+                if (VideoFragment.this.isVisible() && null != rootView) {
+                    if (goUp) {//向上滚动
+                        rootView.setTranslationY(-transY);
+                    } else {//向下滚动
+                        rootView.setTranslationY(getDeviceHeight(getActivity()) - transY);
+                    }
+
+                    if(transY == 0){//强制刷新Y坐标 ----- 在此要加上停止视频播放，初始化下一次加载的操作
+                        rootView.setTranslationY(0);
+                    }
+                }
+            }
+        };
+
+        return listener;
+    }
+
+    public static int getDeviceHeight(Context context) {
+        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        DisplayMetrics mDisplayMetrics = new DisplayMetrics();
+        wm.getDefaultDisplay().getMetrics(mDisplayMetrics);
+        return mDisplayMetrics.heightPixels;
+    }
 
     @Nullable
     @Override
@@ -34,6 +70,7 @@ public class VideoFragment extends Fragment implements SurfaceHolder.Callback, M
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        rootView = view.findViewById(R.id.layout_root);
         surfaceView = (SurfaceView) view.findViewById(R.id.sv_video);
         SurfaceHolder holder = surfaceView.getHolder();
         holder.addCallback(this);
