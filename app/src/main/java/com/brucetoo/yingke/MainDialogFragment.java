@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 
 /**
  * Created by Bruce Too
@@ -56,6 +57,8 @@ public class MainDialogFragment extends DialogFragment {
             }
         });
         viewPager.setCurrentItem(1);
+
+        getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
     }
 
     @NonNull
