@@ -1,5 +1,7 @@
 package com.brucetoo.yingke;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.Context;
@@ -8,7 +10,6 @@ import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +31,7 @@ public class TopLayerFragment extends Fragment {
     View leftHeader;
     View btnShow;
     EditText editInput;
+    private boolean isOpen;
 
     private Handler handler = new Handler();
 
@@ -42,40 +44,6 @@ public class TopLayerFragment extends Fragment {
         leftHeader = view.findViewById(R.id.tv_header_left);
         btnShow = view.findViewById(R.id.btn_show_edit);
         editInput = (EditText) view.findViewById(R.id.edit_input);
-
-        view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (editInput.getVisibility() == View.VISIBLE) {
-                    btnShow.setVisibility(View.VISIBLE);
-                    editInput.setVisibility(View.GONE);
-                    hideKeyboard();
-                }
-            }
-        });
-
-
-        //监听软键盘的隐藏和显示  但是activity的配置必须是 android:windowSoftInputMode="adjustResize" 但是此处的需求不能resize activity中的布局
-        rootView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-
-            @Override
-            public void onGlobalLayout() {
-                int heightDiff = rootView.getRootView().getHeight() - rootView.getHeight();
-                if (heightDiff > 100) { // 软键盘存在
-                    if(!editInput.isShown()) {
-                        Log.e("onGlobalLayout","show");
-                        btnShow.setVisibility(View.GONE);
-                        editInput.setVisibility(View.VISIBLE);
-                    }
-                }else {
-                    if(editInput.isShown()) {
-                        Log.e("onGlobalLayout","hide");
-                        btnShow.setVisibility(View.VISIBLE);
-                        editInput.setVisibility(View.GONE);
-                    }
-                }
-            }
-        });
 
 
         //这个的目的是监听软键盘显示时 点击系统的返回键目的
@@ -111,6 +79,36 @@ public class TopLayerFragment extends Fragment {
                 showKeyboard();
             }
         });
+
+        //监听软键盘的隐藏和显示  但是activity的配置必须是 android:windowSoftInputMode="adjustResize" 但是此处的需求不能resize activity中的布局
+        rootView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+
+            @Override
+            public void onGlobalLayout() {
+                int heightDiff = rootView.getRootView().getHeight() - rootView.getHeight();
+                if (heightDiff > 100) { // 软键盘存在
+                    btnShow.setVisibility(View.GONE);
+                    editInput.setVisibility(View.VISIBLE);
+                    animateToHide();
+                } else {
+//                    Log.e("onGlobalLayout", "hide");
+                    btnShow.setVisibility(View.VISIBLE);
+                    editInput.setVisibility(View.GONE);
+                    animateToShow();
+                }
+            }
+        });
+
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (editInput.getVisibility() == View.VISIBLE) {
+                    btnShow.setVisibility(View.VISIBLE);
+                    editInput.setVisibility(View.GONE);
+                    hideKeyboard();
+                }
+            }
+        });
     }
 
     private void hideKeyboard() {
@@ -119,12 +117,32 @@ public class TopLayerFragment extends Fragment {
                 getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(editInput.getWindowToken(), 0);
 
-        ObjectAnimator leftAnim = ObjectAnimator.ofFloat(leftHeader,"translationX",-leftHeader.getWidth(),0);
-        ObjectAnimator topAnim = ObjectAnimator.ofFloat(topHeader,"translationY",-topHeader.getHeight(),0);
-        AnimatorSet animatorSet = new AnimatorSet();
-        animatorSet.playTogether(leftAnim,topAnim);
-        animatorSet.setDuration(300);
-        animatorSet.start();
+        animateToShow();
+    }
+
+    private void animateToShow() {
+
+        ObjectAnimator leftAnim = ObjectAnimator.ofFloat(leftHeader, "translationX", -leftHeader.getWidth(), 0);
+        ObjectAnimator topAnim = ObjectAnimator.ofFloat(topHeader, "translationY", -topHeader.getHeight(), 0);
+        animatorSetShow.playTogether(leftAnim, topAnim);
+        animatorSetShow.setDuration(300);
+        animatorSetShow.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+                isOpen = false;
+            }
+
+            @Override
+            public void onAnimationStart(Animator animation) {
+                super.onAnimationStart(animation);
+                isOpen = true;
+            }
+        });
+        if(!isOpen) {
+            animatorSetShow.start();
+        }
+
     }
 
     private void showKeyboard() {
@@ -138,12 +156,35 @@ public class TopLayerFragment extends Fragment {
         }, 100);
 
         //头部的View执行退出动画
-        ObjectAnimator leftAnim = ObjectAnimator.ofFloat(leftHeader,"translationX",0,-leftHeader.getWidth());
-        ObjectAnimator topAnim = ObjectAnimator.ofFloat(topHeader,"translationY",0,-topHeader.getHeight());
-        AnimatorSet animatorSet = new AnimatorSet();
-        animatorSet.playTogether(leftAnim, topAnim);
-        animatorSet.setDuration(300);
-        animatorSet.start();
+        animateToHide();
+    }
+
+    AnimatorSet animatorSetHide = new AnimatorSet();
+    AnimatorSet animatorSetShow = new AnimatorSet();
+
+    private void animateToHide() {
+
+//            Log.e("animateTo", "hide:" + animatorSetShow.isRunning());
+        ObjectAnimator leftAnim = ObjectAnimator.ofFloat(leftHeader, "translationX", 0, -leftHeader.getWidth());
+        ObjectAnimator topAnim = ObjectAnimator.ofFloat(topHeader, "translationY", 0, -topHeader.getHeight());
+        animatorSetHide.playTogether(leftAnim, topAnim);
+        animatorSetHide.setDuration(300);
+        animatorSetHide.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+                isOpen = false;
+            }
+
+            @Override
+            public void onAnimationStart(Animator animation) {
+                super.onAnimationStart(animation);
+                isOpen = true;
+            }
+        });
+        if (!isOpen) {
+            animatorSetHide.start();
+        }
     }
 
     public void toggleSoftInput() {
