@@ -50,6 +50,7 @@ public class TopMainFragment extends Fragment {
             }
         });
         viewPager.setCurrentItem(1);
+        viewPager.setOverScrollMode(ViewPager.OVER_SCROLL_NEVER);
 
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 

@@ -40,12 +40,12 @@ public class CustomEditText extends EditText {
 
     @Override
     public boolean onKeyPreIme(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK) {
-            if(null != listener) {
-                listener.onKeycodeBack();
-                return true;
-            }
-        }
+//        if (keyCode == KeyEvent.KEYCODE_BACK) {
+//            if(null != listener) {
+//                listener.onKeycodeBack();
+//                return true;
+//            }
+//        }
         return super.onKeyPreIme(keyCode, event);
     }
 
