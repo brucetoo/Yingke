@@ -26,6 +26,7 @@ public class CustomEditText extends EditText {
 
     public CustomEditText(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
